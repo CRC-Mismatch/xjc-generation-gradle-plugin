@@ -145,8 +145,19 @@ class XjcPlugin : Plugin<Project> {
 	}
 
 	private fun getSchemaFiles(project: Project, schemaRootDir: String, schema: Schema, useSchemaFile: Boolean): FileCollection {
+		val schemaIncludesRegex = Regex(
+			schema.schemaDirIncludes
+				!!.replace(".", "\\.")
+				.replace("*", ".*")
+		)
 		return if (useSchemaFile) project.files("$schemaRootDir/${schema.schemaFile}")
-							else project.files(project.file("$schemaRootDir/${schema.schemaDir}").walkTopDown().filter { it.isFile }.toList())
+							else project.files(project.file("$schemaRootDir/${schema.schemaDir}").walkTopDown().filter {
+										it.isFile
+										&& (
+											schema.schemaDirIncludes == null
+											|| it.name.matches(schemaIncludesRegex)
+											)
+							}.toList())
 	}
 
 	private fun getTaskName(schema: Schema): String {

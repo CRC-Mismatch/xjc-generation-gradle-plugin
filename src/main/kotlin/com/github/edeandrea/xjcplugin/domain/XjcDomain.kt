@@ -115,6 +115,12 @@ class Schema(val name: String) {
 	var schemaDir: String? = null
 
 	/**
+	 * The includes clause for the schema directory. Only useful if [schemaDir] is set.
+	 * @since 1.8
+	 */
+	var schemaDirIncludes: String? = null
+
+	/**
 	 * Indicates if the schema files should be processed by xjc in one pass or one by one.
 	 * @since 1.3
 	 */
